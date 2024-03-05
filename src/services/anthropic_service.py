@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 class AnthropicService:
     def __init__(self):
         load_dotenv()
-        self.client = anthropic.Anthropic(
+        self.llm = anthropic.Anthropic(
             api_key=os.getenv("ANTHROPIC_API_KEY"),
         )
 
@@ -19,12 +19,12 @@ class AnthropicService:
             "Use emoijs where appropriate, but never more than 3 in one post"
             "The user will provide the topics and extra details to include in the post."
             "Output in JSON format, with the following keys: content, keywords, title"
-            "content: the full linked post, with the content properly escaped and formatted"
+            "content: the full linkedin post, with the content properly escaped and formatted with every paragraph separated by a newline character."
             "keywords: list of relevant keywords for the post,"
             "title: a title for the post for internal reference in CMS"
         )
 
-        message = self.client.messages.create(
+        message = self.llm.messages.create(
             # model="claude-3-opus-20240229",  # Most powerful model
             model="claude-3-sonnet-20240229",  # Most balanced model
             max_tokens=1000,
@@ -56,8 +56,5 @@ anthropic_service = AnthropicService()
 result = anthropic_service.generate_reponse(
     prompt="Write a linkedin post about the often overlooked importance data plays in AI strategy."
 )
-
-
-result["content"]
 
 print(result["content"])
